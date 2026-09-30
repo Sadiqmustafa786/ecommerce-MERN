@@ -55,7 +55,7 @@ const Products = () => {
           if (filtered.length === 0) {
             return (
               <div className="rounded-xl border bg-white px-4 py-16 text-center text-gray-500 sm:py-20">
-                Is category se related koi product nahi hai
+                There are no products related to this category.
               </div>
             );
           }
