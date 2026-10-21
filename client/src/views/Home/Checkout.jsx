@@ -53,7 +53,7 @@ const Checkout = () => {
 
         <button
           onClick={() => navigate("/products")}
-          className="px-6 py-3 mt-5 text-white bg-primary rounded-lg hover:bg-primary-700"
+          className="px-6 py-3 mt-5 text-white bg-primary rounded-lg hover:bg-primary"
         >
           Continue Shopping
         </button>
@@ -205,7 +205,7 @@ const Checkout = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 font-semibold text-white bg-primary rounded-lg hover:bg-primary-700 disabled:opacity-50"
+              className="w-full py-3 font-semibold text-white bg-primary rounded-lg hover:bg-primary disabled:opacity-50"
             >
               {loading ? "Processing..." : "Place Order"}
             </button>
@@ -221,7 +221,7 @@ const Checkout = () => {
 
           <div className="space-y-4">
             {cart.items.map((item) => (
-              <div key={item.id} className="flex items-center gap-3">
+              <div key={item._id} className="flex items-center gap-3">
                 <img
                   src={item.product.image}
                   alt={item.product.name}
@@ -232,6 +232,17 @@ const Checkout = () => {
                   <p className="font-medium text-gray-800">
                     {item.product.name}
                   </p>
+
+                  {(item.color || item.size) && (
+                    <p className="text-xs text-gray-500">
+                      {[
+                        item.color && `Color: ${item.color}`,
+                        item.size && `Size: ${item.size}`,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  )}
 
                   <p className="text-sm text-gray-500">
                     {item.quantity} × ${item.product.price}

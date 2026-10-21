@@ -57,7 +57,7 @@ const PaymentSuccess = () => {
   return (
     <section className="min-h-screen px-6 py-10 bg-gray-50">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-5 shadow sm:p-8">
-        <h1 className="text-2xl font-bold text-green-700">
+        <h1 className="text-2xl font-bold text-primary">
           Payment Successful
         </h1>
 
@@ -69,7 +69,7 @@ const PaymentSuccess = () => {
         <div className="mt-6">
           <button
             onClick={() => navigate("/orders")}
-            className="w-full rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary-700 sm:w-auto"
+            className="w-full rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary sm:w-auto"
           >
             View Orders
           </button>

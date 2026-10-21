@@ -10,6 +10,8 @@ const ProductForm = ({ onClose, selectedProduct }) => {
     price: "",
     stock: "",
     category: "",
+    colors: "",
+    sizes: "",
   });
 
   const [image, setImage] = useState(null);
@@ -30,6 +32,8 @@ const ProductForm = ({ onClose, selectedProduct }) => {
         stock: selectedProduct.stock,
         category:
           selectedProduct.category?._id || selectedProduct.category || " ",
+        colors: (selectedProduct.colors || []).join(", "),
+        sizes: (selectedProduct.sizes || []).join(", "),
       });
     } else {
       setFormData({
@@ -38,6 +42,8 @@ const ProductForm = ({ onClose, selectedProduct }) => {
         price: "",
         stock: "",
         category: "",
+        colors: "",
+        sizes: "",
       });
 
       setImage(null);
@@ -74,6 +80,10 @@ const ProductForm = ({ onClose, selectedProduct }) => {
       data.append("stock", formData.stock);
 
       data.append("category", formData.category);
+
+      data.append("colors", formData.colors);
+
+      data.append("sizes", formData.sizes);
 
       if (image) {
         data.append("image", image);
@@ -170,6 +180,37 @@ const ProductForm = ({ onClose, selectedProduct }) => {
       </div>
 
       <div>
+        <label className="block mb-2 font-medium">Available Colors</label>
+        <input
+          type="text"
+          name="colors"
+          value={formData.colors}
+          onChange={handleChange}
+          placeholder="Black, White, Navy"
+          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <p className="mt-1 text-sm text-gray-500">
+          Separate each color with a comma. Leave blank if this product has no
+          color options.
+        </p>
+      </div>
+
+      <div>
+        <label className="block mb-2 font-medium">Available Sizes</label>
+        <input
+          type="text"
+          name="sizes"
+          value={formData.sizes}
+          onChange={handleChange}
+          placeholder="S, M, L or 40, 41, 42"
+          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <p className="mt-1 text-sm text-gray-500">
+          Add clothing sizes or shoe sizes, separated by commas.
+        </p>
+      </div>
+
+      <div>
         <label className="block mb-2 font-medium">Product Image</label>
 
         <input
@@ -200,7 +241,7 @@ const ProductForm = ({ onClose, selectedProduct }) => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-primary px-5 py-2 text-white hover:bg-primary-700 disabled:opacity-50 sm:w-auto"
+          className="w-full rounded-lg bg-primary px-5 py-2 text-white hover:bg-primary disabled:opacity-50 sm:w-auto"
         >
           {loading
             ? "Saving..."

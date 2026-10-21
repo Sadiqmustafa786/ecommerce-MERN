@@ -226,6 +226,35 @@ const useProductStore = create((set, get) => ({
     }
   },
 
+  addProductComment: async (id, text) => {
+    try {
+      set({
+        error: null,
+      });
+
+      const response = await productService.addProductComment(id, text);
+
+      set((state) => ({
+        product:
+          state.product?._id === id ? response.product : state.product,
+        products: state.products.map((item) =>
+          item._id === id ? response.product : item,
+        ),
+      }));
+
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to add comment";
+
+      set({
+        error: message,
+      });
+
+      throw error;
+    }
+  },
+
   // ===========================
   // Clear
   // ===========================

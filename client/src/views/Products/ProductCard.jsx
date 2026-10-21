@@ -47,6 +47,12 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async (event) => {
     event.stopPropagation();
+
+    if (product.colors?.length || product.sizes?.length) {
+      navigate(`/products/${product._id}`);
+      return;
+    }
+
     if (!token) {
       alert("Please log in to add items to your cart.");
       return;
@@ -87,7 +93,7 @@ const ProductCard = ({ product }) => {
           type="button"
           aria-label="Add to wishlist"
           onClick={handleWishlistToggle}
-          className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-500 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:text-rose-500"
+          className="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-500 shadow-sm backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:text-secondary"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +103,7 @@ const ProductCard = ({ product }) => {
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`h-4 w-4 ${isWishlisted ? "text-rose-500" : "text-slate-500"}`}
+            className={`h-4 w-4 ${isWishlisted ? "text-secondary" : "text-slate-500"}`}
           >
             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z" />
           </svg>
@@ -110,7 +116,7 @@ const ProductCard = ({ product }) => {
         </h3>
 
         <div className="mt-2 flex items-center gap-1.5">
-          <div className="flex items-center gap-0.5 text-xs text-amber-400">
+          <div className="flex items-center gap-0.5 text-xs text-secondary">
             {[1, 2, 3, 4, 5].map((star) => (
               <span
                 key={star}
@@ -140,7 +146,7 @@ const ProductCard = ({ product }) => {
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-primary-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-300"
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-primary active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           {product.stock > 0 ? (
             <>
@@ -158,7 +164,9 @@ const ProductCard = ({ product }) => {
                 <circle cx="19" cy="21" r="1" />
                 <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.42H5.12" />
               </svg>
-              Add to Cart
+              {product.colors?.length || product.sizes?.length
+                ? "Choose Options"
+                : "Add to Cart"}
             </>
           ) : (
             "Unavailable"

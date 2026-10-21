@@ -142,7 +142,7 @@ export const forgotPassword = async (req, res) => {
           <div style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6;">
             <h2>Password reset request</h2>
             <p>Use the button below to choose a new password. This link expires in 15 minutes.</p>
-            <p><a href="${resetUrl}" style="display: inline-block; padding: 10px 16px; color: #ffffff; background: #2563eb; text-decoration: none; border-radius: 6px;">Reset Password</a></p>
+            <p><a href="${resetUrl}" style="display: inline-block; padding: 10px 16px; color: #ffffff; background: #007979; text-decoration: none; border-radius: 6px;">Reset Password</a></p>
             <p>If you did not request this, you can ignore this email.</p>
           </div>
         `,

@@ -154,8 +154,8 @@ const UserList = () => {
                     <span
                       className={`px-3 py-1 text-sm rounded-full ${
                         user.role === "admin"
-                          ? "bg-primary-100 text-primary-700"
-                          : "bg-secondary-100 text-primary-700"
+                          ? "bg-secondary/10 text-primary"
+                          : "bg-secondary/10 text-primary"
                       }`}
                     >
                       {user.role}
@@ -178,7 +178,7 @@ const UserList = () => {
                       type="button"
                       onClick={() => openDeleteModal(user)}
                       aria-label={`Delete ${user.name}`}
-                      className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                      className="px-3 py-1 text-white bg-primary rounded hover:bg-primary"
                     >
                       Delete
                     </button>
@@ -210,8 +210,8 @@ const UserList = () => {
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${
                         user.role === "admin"
-                          ? "bg-primary-100 text-primary-700"
-                          : "bg-secondary-100 text-primary-700"
+                          ? "bg-secondary/10 text-primary"
+                          : "bg-secondary/10 text-primary"
                       }`}
                     >
                       {user.role}
@@ -233,7 +233,7 @@ const UserList = () => {
                   type="button"
                   aria-label={`Delete ${user.name}`}
                   onClick={() => openDeleteModal(user)}
-                  className="flex-1 rounded bg-red-500 px-3 py-2 text-sm text-white transition hover:bg-red-600"
+                  className="flex-1 rounded bg-primary px-3 py-2 text-sm text-white transition hover:bg-primary"
                 >
                   Delete
                 </button>
@@ -306,7 +306,7 @@ const UserList = () => {
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-primary px-5 py-2 text-white hover:bg-primary-700 disabled:opacity-50"
+              className="rounded-lg bg-primary px-5 py-2 text-white hover:bg-primary disabled:opacity-50"
             >
               {loading ? "Saving..." : "Save Changes"}
             </button>
@@ -347,7 +347,7 @@ const UserList = () => {
               type="button"
               onClick={handleDelete}
               disabled={loading}
-              className="px-5 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50"
+              className="px-5 py-2 text-white bg-primary rounded-lg hover:bg-primary disabled:opacity-50"
             >
               {loading ? "Deleting..." : "Delete"}
             </button>

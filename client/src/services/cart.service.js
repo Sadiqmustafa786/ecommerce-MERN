@@ -1,10 +1,11 @@
 import http from "./http";
 
 // Add To Cart
-const addToCart = async (productId, quantity = 1) => {
+const addToCart = async (productId, quantity = 1, options = {}) => {
   const response = await http.post("/cart", {
     productId,
     quantity,
+    ...options,
   });
 
   return response.data;
@@ -18,18 +19,19 @@ const getCart = async () => {
 };
 
 // Update Quantity
-const updateQuantity = async (productId, quantity) => {
+const updateQuantity = async (cartItemId, quantity, options = {}) => {
   const response = await http.put("/cart/update", {
-    productId,
+    cartItemId,
     quantity,
+    ...options,
   });
 
   return response.data;
 };
 
 // Remove Item
-const removeItem = async (productId) => {
-  const response = await http.delete(`/cart/remove/${productId}`);
+const removeItem = async (cartItemId) => {
+  const response = await http.delete(`/cart/remove/${cartItemId}`);
 
   return response.data;
 };

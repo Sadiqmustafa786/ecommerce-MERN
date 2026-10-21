@@ -53,7 +53,7 @@ const OrderDetails = () => {
         <button
           type="button"
           onClick={() => navigate("/orders")}
-          className="px-6 py-3 mt-5 text-white bg-primary rounded-lg hover:bg-primary-700"
+          className="px-6 py-3 mt-5 text-white bg-primary rounded-lg hover:bg-primary"
         >
           Back to Orders
         </button>
@@ -115,7 +115,7 @@ const OrderDetails = () => {
                 <div>
                   <p className="text-sm text-gray-500">Order Status</p>
 
-                  <span className="inline-block px-3 py-1 mt-1 text-sm font-medium text-primary-700 bg-secondary-100 rounded-full">
+                  <span className="inline-block px-3 py-1 mt-1 text-sm font-medium text-primary bg-secondary/10 rounded-full">
                     {order.status}
                   </span>
                 </div>
@@ -136,10 +136,10 @@ const OrderDetails = () => {
                   <span
                     className={`inline-block px-3 py-1 mt-1 text-sm font-medium rounded-full ${
                       order.paymentStatus === "paid"
-                        ? "text-green-700 bg-green-100"
+                        ? "text-primary bg-secondary/10"
                         : order.paymentStatus === "failed"
-                          ? "text-red-700 bg-red-100"
-                          : "text-yellow-700 bg-yellow-100"
+                          ? "text-primary bg-secondary/10"
+                          : "text-primary bg-secondary/10"
                     }`}
                   >
                     {order.paymentStatus.charAt(0).toUpperCase() +
@@ -172,6 +172,17 @@ const OrderDetails = () => {
                       <h3 className="font-semibold text-gray-800">
                         {item.name}
                       </h3>
+
+                      {(item.color || item.size) && (
+                        <p className="mt-1 text-sm text-gray-500">
+                          {[
+                            item.color && `Color: ${item.color}`,
+                            item.size && `Size: ${item.size}`,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+                      )}
 
                       <p className="mt-1 text-sm text-gray-500">
                         ${item.price} × {item.quantity}
@@ -263,7 +274,7 @@ const OrderDetails = () => {
               <button
                 type="button"
                 onClick={() => setCancelModal(true)}
-                className="w-full py-3 mt-5 font-semibold text-red-600 border border-red-500 rounded-lg hover:bg-red-50"
+                className="w-full py-3 mt-5 font-semibold text-primary border border-primary rounded-lg hover:bg-secondary/10"
               >
                 Cancel Order
               </button>
@@ -295,7 +306,7 @@ const OrderDetails = () => {
               type="button"
               onClick={handleCancelOrder}
               disabled={loading}
-              className="px-5 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50"
+              className="px-5 py-2 text-white bg-primary rounded-lg hover:bg-primary disabled:opacity-50"
             >
               {loading ? "Cancelling..." : "Yes, Cancel"}
             </button>

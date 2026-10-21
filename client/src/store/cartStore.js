@@ -49,14 +49,18 @@ const useCartStore = create((set, get) => ({
   // Add To Cart
   // ===========================
 
-  addToCart: async (productId, quantity = 1) => {
+  addToCart: async (productId, quantity = 1, options = {}) => {
     try {
       set({
         loading: true,
         error: null,
       });
 
-      const response = await cartService.addToCart(productId, quantity);
+      const response = await cartService.addToCart(
+        productId,
+        quantity,
+        options,
+      );
 
       set({
         cart: response.cart,
@@ -82,14 +86,18 @@ const useCartStore = create((set, get) => ({
   // Update Quantity
   // ===========================
 
-  updateQuantity: async (productId, quantity) => {
+  updateQuantity: async (cartItemId, quantity, options = {}) => {
     try {
       set({
         loading: true,
         error: null,
       });
 
-      const response = await cartService.updateQuantity(productId, quantity);
+      const response = await cartService.updateQuantity(
+        cartItemId,
+        quantity,
+        options,
+      );
 
       set({
         cart: response.cart,
@@ -116,14 +124,14 @@ const useCartStore = create((set, get) => ({
   // Remove Item
   // ===========================
 
-  removeItem: async (productId) => {
+  removeItem: async (cartItemId) => {
     try {
       set({
         loading: true,
         error: null,
       });
 
-      const response = await cartService.removeItem(productId);
+      const response = await cartService.removeItem(cartItemId);
 
       set({
         cart: response.cart,

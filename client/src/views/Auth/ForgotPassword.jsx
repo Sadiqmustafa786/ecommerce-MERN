@@ -36,7 +36,7 @@ const ForgotPassword = () => {
         </p>
 
         {submitted ? (
-          <div className="mt-6 rounded-lg bg-green-50 p-4 text-center text-green-700">
+          <div className="mt-6 rounded-lg bg-secondary/10 p-4 text-center text-primary">
             Check your inbox for the password reset link.
           </div>
         ) : (
@@ -56,7 +56,7 @@ const ForgotPassword = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-primary py-3 text-white hover:bg-primary-700 disabled:opacity-50"
+              className="w-full rounded-lg bg-primary py-3 text-white hover:bg-primary disabled:opacity-50"
             >
               {loading ? "Sending..." : "Send Reset Link"}
             </button>

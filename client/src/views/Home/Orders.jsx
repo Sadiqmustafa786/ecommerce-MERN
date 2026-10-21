@@ -55,7 +55,7 @@ const Orders = () => {
             <button
               type="button"
               onClick={() => navigate("/products")}
-              className="mt-6 w-full max-w-xs rounded-lg bg-primary px-6 py-3 text-white hover:bg-primary-700"
+              className="mt-6 w-full max-w-xs rounded-lg bg-primary px-6 py-3 text-white hover:bg-primary"
             >
               Continue Shopping
             </button>
@@ -87,7 +87,7 @@ const Orders = () => {
                   <div className="flex items-center gap-2 sm:gap-3">
                     <span className="text-sm text-gray-500">Status:</span>
 
-                    <span className="px-3 py-1 text-sm font-medium text-primary-700 bg-secondary-100 rounded-full">
+                    <span className="px-3 py-1 text-sm font-medium text-primary bg-secondary/10 rounded-full">
                       {order.status}
                     </span>
                   </div>
@@ -107,10 +107,10 @@ const Orders = () => {
                       <span
                         className={`px-2 py-1 text-xs font-medium rounded-full ${
                           order.paymentStatus === "paid"
-                            ? "text-green-700 bg-green-100"
+                            ? "text-primary bg-secondary/10"
                             : order.paymentStatus === "failed"
-                              ? "text-red-700 bg-red-100"
-                              : "text-yellow-700 bg-yellow-100"
+                              ? "text-primary bg-secondary/10"
+                              : "text-primary bg-secondary/10"
                         }`}
                       >
                         {order.paymentStatus}
@@ -133,7 +133,7 @@ const Orders = () => {
                   <button
                     type="button"
                     onClick={() => navigate(`/orders/${order._id}`)}
-                    className="px-4 py-2 font-medium text-white bg-primary rounded-lg hover:bg-primary-700"
+                    className="px-4 py-2 font-medium text-white bg-primary rounded-lg hover:bg-primary"
                   >
                     View Details
                   </button>

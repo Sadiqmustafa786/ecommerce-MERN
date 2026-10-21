@@ -15,11 +15,36 @@ const invalidQuantityResponse = (res) =>
     message: "Quantity must be a positive whole number",
   });
 
+const normalizeOption = (value) =>
+  typeof value === "string" ? value.trim() : "";
+
+const validateOptions = (product, color, size) => {
+  if (product.colors.length && !product.colors.includes(color)) {
+    return "Please select a valid color";
+  }
+
+  if (product.sizes.length && !product.sizes.includes(size)) {
+    return "Please select a valid size";
+  }
+
+  if (color && !product.colors.includes(color)) {
+    return "The selected color is not available";
+  }
+
+  if (size && !product.sizes.includes(size)) {
+    return "The selected size is not available";
+  }
+
+  return null;
+};
+
 // Add Product To Cart
 
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
+    const color = normalizeOption(req.body.color);
+    const size = normalizeOption(req.body.size);
     const requestedQuantity = parseQuantity(quantity, 1);
 
     if (!isValidObjectId(productId)) {
@@ -30,10 +55,18 @@ export const addToCart = async (req, res) => {
       return invalidQuantityResponse(res);
     }
 
-    const product = await Product.findById(productId).select("stock name");
+    const product = await Product.findById(productId).select(
+      "stock name colors sizes",
+    );
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
+    }
+
+    const optionError = validateOptions(product, color, size);
+
+    if (optionError) {
+      return res.status(400).json({ message: optionError });
     }
 
     const userId = req.user._id;
@@ -53,7 +86,9 @@ export const addToCart = async (req, res) => {
 
       cart = await Cart.create({
         user: userId,
-        items: [{ product: productId, quantity: requestedQuantity }],
+        items: [
+          { product: productId, quantity: requestedQuantity, color, size },
+        ],
       });
 
       return res.status(201).json({
@@ -63,11 +98,17 @@ export const addToCart = async (req, res) => {
     }
 
     const existingItem = cart.items.find(
-      (item) => item.product.toString() === productId,
+      (item) =>
+        item.product.toString() === productId &&
+        item.color === color &&
+        item.size === size,
     );
+    const productQuantity = cart.items
+      .filter((item) => item.product.toString() === productId)
+      .reduce((total, item) => total + item.quantity, 0);
     const nextQuantity = (existingItem?.quantity || 0) + requestedQuantity;
 
-    if (nextQuantity > product.stock) {
+    if (productQuantity + requestedQuantity > product.stock) {
       return res.status(409).json({
         message: `${product.name} has only ${product.stock} item(s) in stock`,
       });
@@ -76,7 +117,12 @@ export const addToCart = async (req, res) => {
     if (existingItem) {
       existingItem.quantity = nextQuantity;
     } else {
-      cart.items.push({ product: productId, quantity: requestedQuantity });
+      cart.items.push({
+        product: productId,
+        quantity: requestedQuantity,
+        color,
+        size,
+      });
     }
 
     await cart.save();
@@ -116,27 +162,15 @@ export const getCart = async (req, res) => {
 
 export const updateCartQuantity = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
+    const { cartItemId, productId, quantity, color, size } = req.body;
     const requestedQuantity = parseQuantity(quantity);
 
-    if (!isValidObjectId(productId)) {
-      return res.status(400).json({ message: "Invalid product id" });
+    if (!isValidObjectId(cartItemId || productId)) {
+      return res.status(400).json({ message: "Invalid cart item id" });
     }
 
     if (!requestedQuantity) {
       return invalidQuantityResponse(res);
-    }
-
-    const product = await Product.findById(productId).select("stock name");
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    if (requestedQuantity > product.stock) {
-      return res.status(409).json({
-        message: `${product.name} has only ${product.stock} item(s) in stock`,
-      });
     }
 
     const cart = await Cart.findOne({
@@ -149,9 +183,9 @@ export const updateCartQuantity = async (req, res) => {
       });
     }
 
-    const item = cart.items.find(
-      (item) => item.product.toString() === productId,
-    );
+    const item = cartItemId
+      ? cart.items.id(cartItemId)
+      : cart.items.find((cartItem) => cartItem.product.toString() === productId);
 
     if (!item) {
       return res.status(404).json({
@@ -159,7 +193,66 @@ export const updateCartQuantity = async (req, res) => {
       });
     }
 
-    item.quantity = requestedQuantity;
+    const product = await Product.findById(item.product).select(
+      "stock name colors sizes",
+    );
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (
+      (color !== undefined && typeof color !== "string") ||
+      (size !== undefined && typeof size !== "string")
+    ) {
+      return res.status(400).json({
+        message: "Color and size must be strings",
+      });
+    }
+
+    const selectedColor =
+      color === undefined ? item.color : normalizeOption(color);
+    const selectedSize = size === undefined ? item.size : normalizeOption(size);
+
+    if (
+      (selectedColor && !product.colors.includes(selectedColor)) ||
+      (selectedSize && !product.sizes.includes(selectedSize))
+    ) {
+      return res.status(400).json({
+        message: "The selected color or size is not available",
+      });
+    }
+
+    const sameProductItems = cart.items.filter(
+      (cartItem) => cartItem.product.toString() === item.product.toString(),
+    );
+    const totalProductQuantity = sameProductItems
+      .reduce((total, cartItem) => total + cartItem.quantity, 0);
+
+    if (
+      totalProductQuantity - item.quantity + requestedQuantity >
+      product.stock
+    ) {
+      return res.status(409).json({
+        message: `${product.name} has only ${product.stock} item(s) in stock`,
+      });
+    }
+
+    const matchingVariant = sameProductItems.find(
+      (cartItem) =>
+        cartItem._id.toString() !== item._id.toString() &&
+        cartItem.color === selectedColor &&
+        cartItem.size === selectedSize,
+    );
+
+    if (matchingVariant) {
+      matchingVariant.quantity += requestedQuantity;
+      item.deleteOne();
+    } else {
+      item.color = selectedColor;
+      item.size = selectedSize;
+      item.quantity = requestedQuantity;
+    }
 
     await cart.save();
 
@@ -178,10 +271,10 @@ export const updateCartQuantity = async (req, res) => {
 
 export const removeFromCart = async (req, res) => {
   try {
-    const { productId } = req.params;
+    const { cartItemId } = req.params;
 
-    if (!isValidObjectId(productId)) {
-      return res.status(400).json({ message: "Invalid product id" });
+    if (!isValidObjectId(cartItemId)) {
+      return res.status(400).json({ message: "Invalid cart item id" });
     }
 
     const cart = await Cart.findOne({
@@ -194,9 +287,15 @@ export const removeFromCart = async (req, res) => {
       });
     }
 
-    cart.items = cart.items.filter(
-      (item) => item.product.toString() !== productId,
-    );
+    const cartItem = cart.items.id(cartItemId);
+
+    if (cartItem) {
+      cartItem.deleteOne();
+    } else {
+      cart.items = cart.items.filter(
+        (item) => item.product.toString() !== cartItemId,
+      );
+    }
 
     await cart.save();
 

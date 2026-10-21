@@ -44,6 +44,12 @@ const rateProduct = async (id, rating) => {
   return response.data;
 };
 
+const addProductComment = async (id, text) => {
+  const response = await http.post(`/products/${id}/comments`, { text });
+
+  return response.data;
+};
+
 const productService = {
   getProducts,
 
@@ -56,6 +62,8 @@ const productService = {
   deleteProduct,
 
   rateProduct,
+
+  addProductComment,
 };
 
 export default productService;

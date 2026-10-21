@@ -107,6 +107,23 @@ export const createOrder = async (req, res) => {
       });
     }
 
+    const hasUnavailableOption = cart.items.some(
+      (item) =>
+        (item.product.colors.length &&
+          !item.product.colors.includes(item.color || "")) ||
+        (item.product.sizes.length &&
+          !item.product.sizes.includes(item.size || "")) ||
+        (item.color && !item.product.colors.includes(item.color)) ||
+        (item.size && !item.product.sizes.includes(item.size)),
+    );
+
+    if (hasUnavailableOption) {
+      return res.status(409).json({
+        message:
+          "One or more selected options are no longer available. Please update your cart.",
+      });
+    }
+
     // 4. Prepare order items
     const orderItems = cart.items.map((item) => ({
       product: item.product._id,
@@ -114,6 +131,8 @@ export const createOrder = async (req, res) => {
       image: item.product.image,
       price: item.product.price,
       quantity: item.quantity,
+      color: item.color || "",
+      size: item.size || "",
     }));
 
     reservedItems = await reserveStock(orderItems);
@@ -176,7 +195,13 @@ export const createOrder = async (req, res) => {
           price_data: {
             currency: "usd",
             product_data: {
-              name: item.name,
+              name: [
+                item.name,
+                item.color && `Color: ${item.color}`,
+                item.size && `Size: ${item.size}`,
+              ]
+                .filter(Boolean)
+                .join(" - "),
             },
             unit_amount: Math.round(item.price * 100),
           },
@@ -224,7 +249,11 @@ export const createOrder = async (req, res) => {
               ${orderItems
                 .map(
                   (item) =>
-                    `<li>${item.name} x ${item.quantity} - $${(
+                    `<li>${item.name}${
+                      item.color ? ` (Color: ${item.color})` : ""
+                    }${item.size ? ` (Size: ${item.size})` : ""} x ${
+                      item.quantity
+                    } - $${(
                       item.price * item.quantity
                     ).toFixed(2)}</li>`,
                 )

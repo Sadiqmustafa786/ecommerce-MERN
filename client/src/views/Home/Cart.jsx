@@ -28,7 +28,7 @@ const Cart = () => {
 
   const handleRemove = async () => {
     try {
-      await removeItem(itemToRemove.product._id);
+      await removeItem(itemToRemove._id);
 
       showSuccess("Product removed from cart");
 
@@ -51,6 +51,17 @@ const Cart = () => {
     }
   };
 
+  const handleOptionChange = async (item, option, value) => {
+    try {
+      await updateQuantity(item._id, item.quantity, {
+        color: option === "color" ? value : item.color || "",
+        size: option === "size" ? value : item.size || "",
+      });
+    } catch (error) {
+      showError(error?.response?.data?.message || "Failed to update options");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -70,7 +81,7 @@ const Cart = () => {
 
         <Link
           to="/products"
-          className="mt-6 w-full max-w-xs rounded-lg bg-primary px-6 py-3 text-white hover:bg-primary-700"
+          className="mt-6 w-full max-w-xs rounded-lg bg-primary px-6 py-3 text-white hover:bg-primary"
         >
           Continue Shopping
         </Link>
@@ -95,7 +106,7 @@ const Cart = () => {
           <div className="space-y-4 md:col-span-2">
             {cart.items.map((item) => (
               <div
-                key={item.id}
+                key={item._id}
                 className="flex flex-col gap-4 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:gap-5 sm:p-5"
               >
               {/* Product Image */}
@@ -113,10 +124,76 @@ const Cart = () => {
 
                 <p className="mt-1 text-gray-500">${item.product.price}</p>
 
+                {(item.product.colors?.length > 0 ||
+                  item.product.sizes?.length > 0) && (
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {item.product.colors?.length > 0 && (
+                      <label className="block text-sm font-medium text-gray-700">
+                        Color
+                        <select
+                          value={item.color || ""}
+                          onChange={(event) =>
+                            handleOptionChange(
+                              item,
+                              "color",
+                              event.target.value,
+                            )
+                          }
+                          className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        >
+                          <option value="">Select a color</option>
+                          {item.product.colors.map((color) => (
+                            <option key={color} value={color}>
+                              {color}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
+
+                    {item.product.sizes?.length > 0 && (
+                      <label className="block text-sm font-medium text-gray-700">
+                        Size
+                        <select
+                          value={item.size || ""}
+                          onChange={(event) =>
+                            handleOptionChange(
+                              item,
+                              "size",
+                              event.target.value,
+                            )
+                          }
+                          className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        >
+                          <option value="">Select a size</option>
+                          {item.product.sizes.map((size) => (
+                            <option key={size} value={size}>
+                              {size}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
+                  </div>
+                )}
+
+                {(item.color || item.size) &&
+                  !item.product.colors?.length &&
+                  !item.product.sizes?.length && (
+                  <p className="mt-1 text-sm text-gray-500">
+                    {[
+                      item.color && `Color: ${item.color}`,
+                      item.size && `Size: ${item.size}`,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                  )}
+
                 <div className="mt-3 flex items-center gap-3">
                   <button
                     onClick={() =>
-                      updateQuantity(item.product._id, item.quantity - 1)
+                      updateQuantity(item._id, item.quantity - 1)
                     }
                     disabled={item.quantity <= 1}
                     className="flex items-center justify-center w-8 h-8 border rounded-lg hover:bg-gray-100 disabled:opacity-50"
@@ -130,7 +207,7 @@ const Cart = () => {
 
                   <button
                     onClick={() =>
-                      updateQuantity(item.product._id, item.quantity + 1)
+                      updateQuantity(item._id, item.quantity + 1)
                     }
                     className="flex items-center justify-center w-8 h-8 border rounded-lg hover:bg-gray-100"
                   >
@@ -143,7 +220,7 @@ const Cart = () => {
                     setItemToRemove(item);
                     setDeleteModal(true);
                   }}
-                  className="mt-3 text-sm font-medium text-red-500 hover:text-red-700"
+                  className="mt-3 text-sm font-medium text-secondary hover:text-primary"
                 >
                   Remove
                 </button>
@@ -187,7 +264,7 @@ const Cart = () => {
               <button
                 type="button"
                 onClick={() => setClearCartModal(true)}
-                className="w-full py-3 mb-3 font-semibold text-red-600 border border-red-500 rounded-lg hover:bg-red-50"
+                className="w-full py-3 mb-3 font-semibold text-primary border border-primary rounded-lg hover:bg-secondary/10"
               >
                 Clear Cart
               </button>
@@ -195,7 +272,7 @@ const Cart = () => {
               <button
                 type="button"
                 onClick={() => navigate("/checkout")}
-                className="w-full py-3 mt-4 font-semibold text-white bg-primary rounded-lg hover:bg-primary-700"
+                className="w-full py-3 mt-4 font-semibold text-white bg-primary rounded-lg hover:bg-primary"
               >
                 Checkout
               </button>
@@ -236,7 +313,7 @@ const Cart = () => {
             <button
               type="button"
               onClick={handleRemove}
-              className="px-5 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700"
+              className="px-5 py-2 text-white bg-primary rounded-lg hover:bg-primary"
             >
               Remove
             </button>
@@ -266,7 +343,7 @@ const Cart = () => {
             <button
               type="button"
               onClick={handleClearCart}
-              className="px-5 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700"
+              className="px-5 py-2 text-white bg-primary rounded-lg hover:bg-primary"
             >
               Clear Cart
             </button>

@@ -32,7 +32,7 @@ const Wishlist = () => {
 
           <button
             onClick={() => navigate("/products")}
-            className="mt-6 rounded-xl bg-slate-900 px-5 py-3 text-sm font-medium text-white hover:bg-slate-800"
+            className="mt-6 rounded-xl bg-primary px-5 py-3 text-sm font-medium text-white hover:bg-slate-800"
           >
             Browse Products
           </button>
@@ -45,13 +45,13 @@ const Wishlist = () => {
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-blue-600">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
             Saved Items
           </p>
           <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">My Wishlist</h1>
         </div>
 
-        <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+        <span className="rounded-full bg-secondary/10 px-3 py-1 text-sm font-medium text-primary">
           {wishlist.length} item{wishlist.length > 1 ? "s" : ""}
         </span>
       </div>

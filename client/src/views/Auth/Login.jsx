@@ -96,11 +96,11 @@ const Login = () => {
         <h1 className="mb-6 text-2xl font-bold text-center sm:text-3xl">Welcome Back</h1>
 
         {error && (
-          <p className="p-3 mb-4 text-red-600 bg-red-100 rounded">{error}</p>
+          <p className="p-3 mb-4 text-primary bg-secondary/10 rounded">{error}</p>
         )}
 
         {success && (
-          <p className="p-3 mb-4 text-green-600 bg-green-100 rounded">
+          <p className="p-3 mb-4 text-primary bg-secondary/10 rounded">
             {success}
           </p>
         )}
@@ -135,7 +135,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 text-white bg-primary rounded-lg hover:bg-primary-700"
+            className="w-full py-3 text-white bg-primary rounded-lg hover:bg-primary"
           >
             {loading ? <Loader variant="button" /> : "Login"}
           </button>

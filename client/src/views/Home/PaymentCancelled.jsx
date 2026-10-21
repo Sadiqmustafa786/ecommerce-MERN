@@ -44,7 +44,7 @@ const PaymentCancelled = () => {
   return (
     <section className="min-h-screen px-6 py-10 bg-gray-50">
       <div className="mx-auto max-w-2xl rounded-lg bg-white p-5 shadow sm:p-8">
-        <h1 className="text-2xl font-bold text-red-600">Payment Cancelled</h1>
+        <h1 className="text-2xl font-bold text-primary">Payment Cancelled</h1>
 
         <p className="mt-4 text-gray-600">
           Your payment was cancelled. You can retry payment or continue
@@ -54,7 +54,7 @@ const PaymentCancelled = () => {
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <button
             onClick={() => navigate("/checkout")}
-            className="w-full rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary-700 sm:w-auto"
+            className="w-full rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary sm:w-auto"
           >
             Retry Payment
           </button>

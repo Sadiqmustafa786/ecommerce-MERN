@@ -41,7 +41,7 @@ const CategoryList = () => {
         </div>
 
         <button
-          className="w-full rounded-lg bg-primary px-5 py-2 text-white transition hover:bg-primary-700 sm:w-auto"
+          className="w-full rounded-lg bg-primary px-5 py-2 text-white transition hover:bg-primary sm:w-auto"
           type="button"
           onClick={() => {
             setSelectedCategory(null);
@@ -108,7 +108,7 @@ const CategoryList = () => {
                     </button>
 
                     <button
-                      className="px-3 py-1 text-white bg-red-500 rounded"
+                      className="px-3 py-1 text-white bg-primary rounded"
                       onClick={() => {
                         setSelectedDeleteCategory(category);
                         setDeleteModal(true);
@@ -168,7 +168,7 @@ const CategoryList = () => {
                 <button
                   type="button"
                   aria-label={`Delete ${category.name}`}
-                  className="rounded bg-red-500 px-3 py-1 text-sm text-white transition hover:bg-red-600"
+                  className="rounded bg-primary px-3 py-1 text-sm text-white transition hover:bg-primary"
                   onClick={() => {
                     setSelectedDeleteCategory(category);
                     setDeleteModal(true);
@@ -213,7 +213,7 @@ const CategoryList = () => {
             </button>
 
             <button
-              className="px-4 py-2 text-white bg-red-600 rounded-lg"
+              className="px-4 py-2 text-white bg-primary rounded-lg"
               onClick={handleDelete}
             >
               Delete

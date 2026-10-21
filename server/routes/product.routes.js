@@ -4,6 +4,7 @@ import {
   createProduct,
   getProducts,
   getProductById,
+  addProductComment,
   rateProduct,
   updateProduct,
   deleteProduct,
@@ -18,6 +19,8 @@ const router = express.Router();
 router.post("/", protect, admin, uploadProductImage, createProduct);
 
 router.get("/", getProducts);
+
+router.post("/:id/comments", protect, addProductComment);
 
 router.post("/:id/rate", protect, rateProduct);
 

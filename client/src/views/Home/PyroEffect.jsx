@@ -3,9 +3,9 @@ import { useEffect, useRef } from "react";
 /**
  * PyroEffect
  * Real stage-pyro style: two dense, continuous vertical fountains shoot
- * up from the bottom-left and bottom-right corners with purple/magenta/
- * white sparks and a warm base flash, matching a real wrestling-entrance
- * pyro column. Once the fountain finishes firing, a soft purple fog bank
+ * up from the bottom-left and bottom-right corners with teal/white sparks
+ * and a teal base flash, matching a real wrestling-entrance pyro column.
+ * Once the fountain finishes firing, a soft teal fog bank
  * lingers on screen and slowly dissolves, like real stage haze settling.
  * Fires once on mount, runs for ~1.4s fountain + ~4s lingering fog, then
  * cleans itself up.
@@ -39,10 +39,10 @@ const PyroEffect = () => {
 
     const rand = (min, max) => Math.random() * (max - min) + min;
 
-    // Sparks cool from white-hot core to deep magenta/purple as they rise
+    // Sparks cool from a white-hot core to deep teal as they rise
     // and slow down — real pyro sparks change color as they lose heat.
     const hotColors = ["255,255,255", "255,250,240", "245,225,255"];
-    const coolColors = ["225,140,255", "190,90,255", "150,50,220", "120,30,180"];
+    const coolColors = ["36,177,177", "36,177,177", "0,121,121", "0,121,121"];
 
     // Two emitters (bottom-left, bottom-right). Each fires a tight,
     // continuous vertical fountain for `emitDuration` ms, then the
@@ -101,7 +101,7 @@ const PyroEffect = () => {
         maxRadius: rand(34, 46),
         flicker: rand(0.75, 1),
       });
-      // soft warm smoke glow that lingers at the base
+      // Soft teal smoke glow that lingers at the base
       smokePuffs.push({
         x: emitter.x,
         y: emitter.y,
@@ -162,7 +162,7 @@ const PyroEffect = () => {
         });
       }
 
-      // Ambient light spill: soft, wide purple glow cast on the area
+      // Ambient light spill: soft, wide teal glow cast on the area
       // around each fountain, like real pyro lighting up its surroundings
       const ambientProgress = Math.min(elapsed / 260, 1);
       const ambientFade = elapsed > emitDuration
@@ -176,9 +176,9 @@ const PyroEffect = () => {
             emitter.x, height * 0.65, 0,
             emitter.x, height * 0.65, glowRadius
           );
-          gradient.addColorStop(0, `rgba(170,90,230,${0.16 * ambientFade})`);
-          gradient.addColorStop(0.5, `rgba(120,60,190,${0.08 * ambientFade})`);
-          gradient.addColorStop(1, "rgba(80,40,150,0)");
+          gradient.addColorStop(0, `rgba(36, 177, 177, ${0.16 * ambientFade})`);
+          gradient.addColorStop(0.5, `rgba(0, 121, 121, ${0.08 * ambientFade})`);
+          gradient.addColorStop(1, "rgba(0, 121, 121, 0)");
           ctx.fillStyle = gradient;
           ctx.beginPath();
           ctx.arc(emitter.x, height * 0.65, glowRadius, 0, Math.PI * 2);
@@ -204,9 +204,9 @@ const PyroEffect = () => {
         const fadeOut = 1 - progress;
         const alpha = g.maxAlpha * fadeIn * fadeOut;
         const gradient = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, radius);
-        gradient.addColorStop(0, `rgba(190,160,220,${alpha})`);
-        gradient.addColorStop(0.6, `rgba(140,110,180,${alpha * 0.6})`);
-        gradient.addColorStop(1, "rgba(100,80,140,0)");
+        gradient.addColorStop(0, `rgba(36, 177, 177, ${alpha})`);
+        gradient.addColorStop(0.6, `rgba(0, 121, 121, ${alpha * 0.6})`);
+        gradient.addColorStop(1, "rgba(0, 121, 121, 0)");
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(g.x, g.y, radius, 0, Math.PI * 2);
@@ -228,15 +228,15 @@ const PyroEffect = () => {
         const radius = h.radius + h.growth * h.life;
         const alpha = (1 - progress) * 0.14;
         const gradient = ctx.createRadialGradient(h.x, h.y, 0, h.x, h.y, radius);
-        gradient.addColorStop(0, `rgba(200,170,230,${alpha})`);
-        gradient.addColorStop(1, "rgba(120,80,160,0)");
+        gradient.addColorStop(0, `rgba(36, 177, 177, ${alpha})`);
+        gradient.addColorStop(1, "rgba(0, 121, 121, 0)");
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(h.x, h.y, radius, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Base smoke glow (soft, warm, lingers under the column)
+      // Base smoke glow (soft, teal, lingers under the column)
       for (let i = smokePuffs.length - 1; i >= 0; i--) {
         const s = smokePuffs[i];
         s.life++;
@@ -248,9 +248,9 @@ const PyroEffect = () => {
         const radius = s.maxRadius;
         const alpha = (1 - progress) * 0.35;
         const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, radius);
-        gradient.addColorStop(0, `rgba(255,190,120,${alpha})`);
-        gradient.addColorStop(0.5, `rgba(255,130,60,${alpha * 0.5})`);
-        gradient.addColorStop(1, "rgba(120,40,140,0)");
+        gradient.addColorStop(0, `rgba(36, 177, 177, ${alpha})`);
+        gradient.addColorStop(0.5, `rgba(36, 177, 177, ${alpha * 0.5})`);
+        gradient.addColorStop(1, "rgba(0, 121, 121, 0)");
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
@@ -270,9 +270,9 @@ const PyroEffect = () => {
         const alpha = (1 - progress) * f.flicker;
         const gradient = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, radius);
         gradient.addColorStop(0, `rgba(255,255,255,${alpha})`);
-        gradient.addColorStop(0.35, `rgba(255,210,150,${alpha * 0.8})`);
-        gradient.addColorStop(0.7, `rgba(255,140,60,${alpha * 0.4})`);
-        gradient.addColorStop(1, "rgba(255,140,60,0)");
+        gradient.addColorStop(0.35, `rgba(36, 177, 177, ${alpha * 0.8})`);
+        gradient.addColorStop(0.7, `rgba(36, 177, 177, ${alpha * 0.4})`);
+        gradient.addColorStop(1, "rgba(36, 177, 177, 0)");
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(f.x, f.y, radius, 0, Math.PI * 2);
@@ -297,7 +297,7 @@ const PyroEffect = () => {
         p.y += p.vy;
 
         const lifeRatio = p.life / p.maxLife;
-        // Cool from hot (white) to cool (purple) as the spark ages
+        // Cool from hot (white) to teal as the spark ages
         const color = lifeRatio < 0.35 ? p.hot : p.cool;
         const twinkle = 0.75 + 0.25 * Math.sin(p.life * p.wobbleSpeed * 3 + p.wobblePhase);
         const alpha = (1 - lifeRatio) * twinkle;

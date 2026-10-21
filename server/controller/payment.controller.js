@@ -9,20 +9,29 @@ const removeOrderItemsFromCart = async (order) => {
     return;
   }
 
+  const getVariantKey = (item) =>
+    JSON.stringify([
+      item.product.toString(),
+      item.color || "",
+      item.size || "",
+    ]);
+
   const orderedQuantities = new Map();
 
   order.items.forEach((item) => {
-    const productId = item.product.toString();
+    const variantKey = getVariantKey(item);
     orderedQuantities.set(
-      productId,
-      (orderedQuantities.get(productId) || 0) + item.quantity,
+      variantKey,
+      (orderedQuantities.get(variantKey) || 0) + item.quantity,
     );
   });
 
   cart.items = cart.items.reduce((remainingItems, item) => {
-    const productId = item.product.toString();
-    const remainingQuantity =
-      item.quantity - (orderedQuantities.get(productId) || 0);
+    const variantKey = getVariantKey(item);
+    const orderedQuantity = orderedQuantities.get(variantKey) || 0;
+    const quantityToRemove = Math.min(item.quantity, orderedQuantity);
+    const remainingQuantity = item.quantity - quantityToRemove;
+    orderedQuantities.set(variantKey, orderedQuantity - quantityToRemove);
 
     if (remainingQuantity > 0) {
       item.quantity = remainingQuantity;

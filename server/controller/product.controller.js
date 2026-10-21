@@ -1,10 +1,27 @@
 import Product from "../models/Product.js";
 
+const parseOptions = (value) => {
+  const options = Array.isArray(value)
+    ? value
+    : typeof value === "string"
+      ? value.split(",")
+      : [];
+
+  return [
+    ...new Set(
+      options
+        .map((option) => (typeof option === "string" ? option.trim() : ""))
+        .filter(Boolean),
+    ),
+  ];
+};
+
 // Create Product
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, category, stock, colors, sizes } =
+      req.body;
 
     const image = req.file?.path || "";
     console.log("Image:", image);
@@ -19,6 +36,10 @@ export const createProduct = async (req, res) => {
       category,
 
       stock,
+
+      colors: parseOptions(colors),
+
+      sizes: parseOptions(sizes),
 
       image,
     });
@@ -57,7 +78,10 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate(
+      "comments.user",
+      "name",
+    );
 
     if (!product) {
       return res.status(404).json({
@@ -66,6 +90,49 @@ export const getProductById = async (req, res) => {
     }
 
     res.json({
+      product,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const addProductComment = async (req, res) => {
+  try {
+    const text = typeof req.body.text === "string" ? req.body.text.trim() : "";
+
+    if (!text) {
+      return res.status(400).json({
+        message: "Comment cannot be empty",
+      });
+    }
+
+    if (text.length > 1000) {
+      return res.status(400).json({
+        message: "Comment cannot exceed 1000 characters",
+      });
+    }
+
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    product.comments.push({
+      user: req.user._id,
+      text,
+    });
+
+    await product.save();
+    await product.populate("comments.user", "name");
+
+    res.status(201).json({
+      message: "Comment added successfully",
       product,
     });
   } catch (error) {
@@ -117,6 +184,7 @@ export const rateProduct = async (req, res) => {
     product.rating = Number((totalRating / product.numReviews).toFixed(1));
 
     await product.save();
+    await product.populate("comments.user", "name");
 
     res.status(200).json({
       message: "Product rated successfully",
@@ -137,7 +205,8 @@ export const updateProduct = async (req, res) => {
   try {
     console.log("BODY:", req.body);
     console.log("FILE:", req.file);
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, category, stock, colors, sizes } =
+      req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -158,6 +227,14 @@ export const updateProduct = async (req, res) => {
     product.category = category || product.category;
 
     product.stock = stock || product.stock;
+
+    if (colors !== undefined) {
+      product.colors = parseOptions(colors);
+    }
+
+    if (sizes !== undefined) {
+      product.sizes = parseOptions(sizes);
+    }
 
     // Update Image If New Image Uploaded
 

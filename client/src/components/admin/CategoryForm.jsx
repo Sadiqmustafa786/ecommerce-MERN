@@ -114,7 +114,7 @@ const CategoryForm = ({ onClose, selectedCategory }) => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary-700 sm:w-auto"
+          className="w-full rounded-lg bg-primary px-4 py-2 text-white hover:bg-primary sm:w-auto"
         >
           {loading ? (
             <Loader variant="button" />

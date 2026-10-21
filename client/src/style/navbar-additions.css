@@ -1,0 +1,68 @@
+/* ===== Split navbar (append at the END of index.css) ===== */
+
+/* Wave edge: gentle sway */
+.nav-wave-a { animation: nav-wave-sway 6s ease-in-out infinite alternate; }
+.nav-wave-b { animation: nav-wave-sway 8s ease-in-out infinite alternate-reverse; }
+.nav-wave-c { animation: nav-wave-sway 7s ease-in-out infinite alternate; }
+
+@keyframes nav-wave-sway {
+  from { transform: translateX(0); }
+  to { transform: translateX(-9px); }
+}
+
+.dark .nav-wave-back { opacity: 0.45; }
+
+/* Right half sits on the teal gradient, so controls switch to white */
+.site-navbar-actions .theme-toggle,
+.dark .site-navbar-actions .theme-toggle {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.site-navbar-actions .theme-toggle:hover,
+.dark .site-navbar-actions .theme-toggle:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.nav-icon-btn {
+  color: #ffffff;
+  transition: background-color 180ms ease;
+}
+
+.nav-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.nav-ghost-link {
+  color: #ffffff;
+}
+
+.nav-ghost-link:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.nav-solid-btn {
+  color: #007979;
+  background: #ffffff;
+}
+
+.nav-solid-btn:hover {
+  box-shadow: 0 10px 22px rgba(0, 60, 60, 0.3);
+}
+
+.nav-cart-badge {
+  color: #007979;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px #007979;
+}
+
+.nav-icon-btn:focus-visible,
+.nav-ghost-link:focus-visible,
+.nav-solid-btn:focus-visible,
+.site-navbar-actions .theme-toggle:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}

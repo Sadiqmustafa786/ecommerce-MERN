@@ -30,6 +30,14 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    colors: {
+      type: [String],
+      default: [],
+    },
+    sizes: {
+      type: [String],
+      default: [],
+    },
     ratings: [
       {
         user: {
@@ -40,6 +48,25 @@ const productSchema = new mongoose.Schema(
           type: Number,
           min: 1,
           max: 5,
+        },
+      },
+    ],
+    comments: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        text: {
+          type: String,
+          required: true,
+          trim: true,
+          maxlength: 1000,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
         },
       },
     ],

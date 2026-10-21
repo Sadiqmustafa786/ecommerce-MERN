@@ -29,7 +29,7 @@ const Products = () => {
         {/* Heading */}
 
         <div className="mb-9 text-center sm:mb-12">
-          <span className="inline-block px-4 py-1 mb-3 text-xs font-semibold tracking-wider text-primary uppercase bg-secondary-50 rounded-full">
+          <span className="inline-block px-4 py-1 mb-3 text-xs font-semibold tracking-wider text-primary uppercase bg-secondary/10 rounded-full">
             Our Collection
           </span>
 

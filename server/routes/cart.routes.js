@@ -22,7 +22,7 @@ router.get("/", protect, getCart);
 router.put("/update", protect, updateCartQuantity);
 
 // Remove product
-router.delete("/remove/:productId", protect, removeFromCart);
+router.delete("/remove/:cartItemId", protect, removeFromCart);
 
 // Clear cart
 router.delete("/clear", protect, clearCart);

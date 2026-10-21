@@ -21,7 +21,7 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      <PyroEffect />
+      {/* <PyroEffect /> */}
 
       <HeroSection />
 
