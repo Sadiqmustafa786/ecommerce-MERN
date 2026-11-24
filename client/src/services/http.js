@@ -3,8 +3,14 @@ import axios from "axios";
 import useAuthStore from "../store/authStore";
 import { showError } from "../utils/toast";
 
+const baseURL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD
+    ? "https://ecommerce-mern-henna.vercel.app/api"
+    : "http://localhost:3000/api");
+
 const http = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL,
 
   headers: {
     "Content-Type": "application/json",
