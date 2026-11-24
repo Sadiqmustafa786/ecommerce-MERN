@@ -3,8 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import AdminLayout from "../layouts/AdminLayout";
 
-import AdminDashboard from "../views/Admin/AdminDashboard";
-
+import AdminDashboard from "../views/admin/AdminDashboard";
 import Login from "../views/Auth/Login";
 import Signup from "../views/Auth/Signup";
 import ForgotPassword from "../views/Auth/ForgotPassword";
