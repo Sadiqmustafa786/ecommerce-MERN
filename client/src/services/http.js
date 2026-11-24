@@ -11,10 +11,6 @@ const http = axios.create({
   },
 });
 
-// ==============================
-// Request Interceptor
-// ==============================
-
 http.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
@@ -26,25 +22,14 @@ http.interceptors.request.use(
     return config;
   },
 
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
-// ==============================
-// Response Interceptor
-// ==============================
-
 http.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-
+  (response) => response,
   (error) => {
     if (error.response) {
       const status = error.response.status;
-
-      // Unauthorized
 
       if (status === 401) {
         showError("Session expired. Please login again");
@@ -53,8 +38,6 @@ http.interceptors.response.use(
 
         window.location.href = "/login";
       }
-
-      // Server Error
 
       if (status === 500) {
         showError("Server error. Please try again");

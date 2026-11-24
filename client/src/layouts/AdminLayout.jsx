@@ -96,7 +96,7 @@ const AdminLayout = () => {
   return (
     <div className="admin-shell min-h-screen">
       <header className="admin-topbar site-navbar sticky top-0 z-50 border-b border-slate-200/70 bg-white/95 shadow-sm backdrop-blur-xl transition-shadow duration-300 dark:border-slate-800 dark:bg-slate-950/95">
-        <div className="relative w-full overflow-hidden">
+        <div className="relative w-full">
           <AdminNavbarWave />
           <div className="relative z-10 mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
             <Link
@@ -120,10 +120,10 @@ const AdminLayout = () => {
               </button>
               <ThemeToggle />
 
-              <div className="admin-notification-wrap">
+              <div className="relative">
                 <button
                   type="button"
-                  className="admin-icon-button nav-icon-btn grid h-10 w-10 place-items-center rounded-full"
+                  className="admin-icon-button nav-icon-btn relative grid h-10 w-10 place-items-center rounded-full"
                   aria-label="Notifications"
                   aria-expanded={notificationsOpen}
                   onClick={handleNotificationsClick}
@@ -136,44 +136,47 @@ const AdminLayout = () => {
                   >
                     <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
                   </svg>
-                  {unreadCount > 0 && <span className="notification-dot" />}
                   {unreadCount > 0 && (
-                    <span className="notification-count">
+                    <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-secondary" />
+                  )}
+                  {unreadCount > 0 && (
+                    <span className="absolute -right-3 -top-2 min-w-4 rounded-full bg-secondary px-1 py-0.5 text-[0.5rem] font-extrabold leading-[1.2] text-white">
                       {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
                   )}
                 </button>
                 {notificationsOpen && (
-                  <div className="admin-notification-panel">
-                    <div className="admin-notification-heading">
-                      <strong>Notifications</strong>
+                  <div className="fixed left-2 right-2 top-[4.25rem] z-[60] max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain rounded-xl border border-slate-200 bg-white shadow-[0_16px_35px_rgba(0,121,121,0.16)] sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 sm:max-h-[28rem] dark:border-slate-700 dark:bg-slate-800">
+                    <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-700">
+                      <strong className="text-xs text-slate-700 dark:text-slate-100">Notifications</strong>
                       <button
                         type="button"
                         onClick={handleMarkAllRead}
                         disabled={!unreadCount}
+                        className="border-0 bg-transparent p-0 text-[0.6rem] font-extrabold text-primary disabled:cursor-default disabled:text-slate-300 dark:text-secondary dark:disabled:text-slate-600"
                       >
                         Mark all read
                       </button>
                     </div>
                     {notifications.length === 0 ? (
-                      <p className="admin-notification-empty">
+                      <p className="m-0 px-4 py-5 text-center text-xs text-slate-400">
                         No notifications yet
                       </p>
                     ) : (
                       notifications.map((notification) => (
                         <div
                           key={notification._id}
-                          className={`admin-notification-item ${!notification.readAt ? "is-unread" : ""}`}
+                          className={`flex gap-2.5 border-b border-slate-100 px-4 py-3 dark:border-slate-700 ${!notification.readAt ? "bg-slate-50 dark:bg-slate-900/40" : ""}`}
                         >
                           <span
-                            className={`admin-notification-icon ${notification.type}`}
+                            className="grid h-7 w-7 flex-none place-items-center rounded-full bg-secondary/10 text-[0.65rem] font-extrabold text-primary"
                           >
                             {notification.type === "order_created" ? "#" : "U"}
                           </span>
                           <span>
-                            <strong>{notification.title}</strong>
-                            <small>{notification.message}</small>
-                            <time>
+                            <strong className="block text-[0.67rem] text-slate-700 dark:text-slate-100">{notification.title}</strong>
+                            <small className="mt-1 block text-[0.61rem] text-slate-500 dark:text-slate-400">{notification.message}</small>
+                            <time className="mt-1 block text-[0.55rem] text-slate-400">
                               {formatNotificationTime(notification.createdAt)}
                             </time>
                           </span>

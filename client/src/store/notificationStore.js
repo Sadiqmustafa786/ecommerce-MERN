@@ -22,7 +22,13 @@ const useNotificationStore = create((set) => ({
 
   markAllRead: async () => {
     await notificationService.markNotificationsRead();
-    set({ unreadCount: 0 });
+    set((state) => ({
+      unreadCount: 0,
+      notifications: state.notifications.map((notification) => ({
+        ...notification,
+        readAt: notification.readAt || new Date().toISOString(),
+      })),
+    }));
   },
 }));
 

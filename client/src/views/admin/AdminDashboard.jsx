@@ -92,7 +92,7 @@ const AdminDashboard = () => {
       <div className="admin-page-heading">
         <div>
           <p className="admin-eyebrow">Store overview</p>
-          <h1>Good morning, Admin</h1>
+          <h1>Admin Dashboard</h1>
           <p className="admin-page-subtitle">Here&apos;s what&apos;s happening across your store today.</p>
         </div>
         <button type="button" onClick={refreshDashboard} className="admin-refresh-button" disabled={isRefreshing}>
